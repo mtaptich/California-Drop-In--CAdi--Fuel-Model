@@ -22,57 +22,38 @@ def RunScenarios():
 	s = FacilityLocationOptimizer(scenario='GASOLINE', config_path=config_path)
 	s.predict();
 	save.supply_network(s)
-	#TargetSpectrum(config_path)
 
 	# S2
 	config_path = 'config/S2_max_diesel.ini'
 	s = FacilityLocationOptimizer(scenario='DIESEL', config_path=config_path)
 	s.predict();
 	save.supply_network(s)
-	#TargetSpectrum(config_path)
 
 	# S3
 	config_path = 'config/S3_centralized_new_construction.ini'
 	s = FacilityLocationOptimizer(config_path=config_path)
 	s.predict();
 	save.supply_network(s)
-	#TargetSpectrum(config_path)
 
 	# S4
 	config_path = 'config/S4_centralized_co_locate.ini'
 	s = FacilityLocationOptimizer(config_path=config_path)
 	s.predict();
 	save.supply_network(s)
-	#TargetSpectrum(config_path)
 
 	# S5
 	config_path = 'config/S5_distributed_ca.ini'
 	s = FacilityLocationOptimizer(config_path=config_path)
 	s.predict();
 	save.supply_network(s)
-	#TargetSpectrum(config_path)
 
 	# S6
-
 	config_path = 'config/S6_even_distribution.ini'
 	s = FacilityLocationOptimizer(config_path=config_path)
 	s.predict();
 	save.supply_network(s)
-	#TargetSpectrum(config_path)
 	
 
 RunScenarios()
-
-"""
-config_path = 'config/S5_distributed_ca.ini'
-s = FacilityLocationOptimizer(config_path=config_path)
-s.predict();
-save.store_at_mid(s);
-save.store_at_down(s);
-save.state_summary(s)
-save.supply_network(s)
-"""
-
-
 
 
