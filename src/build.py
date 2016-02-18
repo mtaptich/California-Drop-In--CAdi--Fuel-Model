@@ -51,7 +51,7 @@ class CreateConfigScenario:
 		s.cur  = create_engine('postgresql://%s@%s:5432/%s' % (s.username, s.host, s.database))
 
 	def biomass_availability(s, SQLcommand=None):
-		if not SQLcommand: SQLcommand = 'SELECT fips AS origin, cropres, forestres, urbanwood + primmill + secmill AS scrapwood FROM solid_biomass_nrel WHERE CAST(fips as real)<7000 AND CAST(fips as real)>= 6000';
+		if not SQLcommand: SQLcommand = 'SELECT fips AS origin, cropres, forestres, urbanwood + primmill + secmill AS scrapwood FROM solid_biomass_carb_study';
 
 		# Set paths 
 		cpath = '%s/input/%s_biomass_availability.csv' % (s.scenario_path, s.scenario)
@@ -362,6 +362,7 @@ class CreateConfigScenario:
 
 
 if __name__ == "__main__":
+	"""
 	c = CreateConfigScenario('S1_max_gasoline', quick_build=True, config_path='../config/', config_template='config_template.ini');
 	c.save()
 
@@ -378,9 +379,10 @@ if __name__ == "__main__":
 
 	c = CreateConfigScenario('S5_distributed_ca', quick_build=True, config_path='../config/', config_template='config_template.ini');
 	c.save()
+	"""
 
 	c = CreateConfigScenario('S6_even_distribution', quick_build=True, config_path='../config/', config_template='config_template.ini')
-	SQLcommand='SELECT id AS destination, CAST(million_gals_gasoline_2012*1000000*(6.0/2209.0)*0.045 AS integer) AS mt_gas_demand, CAST(million_gals_diesel_2012*1000000*(7.5/2209.0) AS integer)*0.068 AS mt_diesel_demand FROM downstream_locations_california';
+	SQLcommand='SELECT id AS destination, CAST(million_gals_gasoline_2012*1000000*(6.0/2209.0)*0.086 AS integer) AS mt_gas_demand, CAST(million_gals_diesel_2012*1000000*(7.5/2209.0) AS integer)*20.4 AS mt_diesel_demand FROM downstream_locations_california';
 	c.energy_demand(SQLcommand=SQLcommand)
 	c.save()
 

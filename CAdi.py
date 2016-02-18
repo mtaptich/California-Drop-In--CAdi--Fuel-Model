@@ -54,6 +54,10 @@ def RunScenarios():
 	save.supply_network(s)
 	
 
-RunScenarios()
+#RunScenarios()
+config_path = 'config/S6_even_distribution.ini'
+s = FacilityLocationOptimizer(config_path=config_path)
+s.predict();
+save.supply_network(s)
 
 
