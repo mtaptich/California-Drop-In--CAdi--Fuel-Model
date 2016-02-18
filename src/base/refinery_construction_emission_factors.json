@@ -1,0 +1,4 @@
+{
+	"upgrade": {"GHG":0, "NOx": 0, "PM10": 0, "PM2.5": 0, "PMunspecified": 0, "SOx": 0, "CO": 0},
+	"construct": {"GHG":0, "NOx": 0, "PM10": 0, "PM2.5": 0, "PMunspecified": 0, "SOx": 0, "CO": 0}
+}
