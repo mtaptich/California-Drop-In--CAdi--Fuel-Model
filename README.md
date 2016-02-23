@@ -1,6 +1,8 @@
 <h1>California Drop-In (CAdi) Fuel Model</h1>
 <p>California Drop-In (CAdi) fuel model calculates the environmental impacts associated with large-scale deployment of second-generation transportation fuels in California.</p>
 
+<p><b>FacilityLocationOptimizer</b>(<em> scenario='EMISSIONS', r_cap=6800, m_units=180, config_path=None</em>) <br>Optimize the sourcing, siting, and distribution processes under various objectives and scenarios. </p>
+
 <h2>Model Dependencies</h2>
 <h3> Install dependencies </h3>
 <p>The core of the CAdi model is written in Python 2.7 and links either directly or through third-party packages to optimization and geospatial tools. The model solves for a set of process-based and supply chain policies for meeting energy and greenhouse gas management objectives. Such policies include where to source material feedstocks, locate refineries, select fuel conversion pathways, and sell to markets. The model includes a number of base scenarios modelled by our researcg group at UC Berkeley. The core model is required to run these scenarios. Additional extentions to the model allow for original scenarios to be buil; this portion requires an object-relational database management system called PostgreSQL. <p>

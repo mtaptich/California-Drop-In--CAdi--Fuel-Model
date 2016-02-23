@@ -7,7 +7,7 @@ import cvxopt.glpk
 
 
 class FacilityLocationOptimizer:
-	def __init__(s, scenario='EMISSIONS', r_cap=6800, m_units=180, config_path='config/config_test_3x2x2x2.ini'):
+	def __init__(s, scenario='EMISSIONS', r_cap=6800, m_units=180, config_path=None):
 		# Configurate the model
 		s.config_path = config_path
 		s.configurate(config_path);
