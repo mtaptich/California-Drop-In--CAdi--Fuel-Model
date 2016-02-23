@@ -2,7 +2,8 @@
 <p>California Drop-In (CAdi) fuel model calculates the environmental impacts associated with large-scale deployment of second-generation transportation fuels in California.</p>
 
 <h2>Usage</h2>
-<p><pre><code>s = <b>FacilityLocationOptimizer</b>(<em>scenario='EMISSIONS', r_cap=6800, m_units=180, config_path=None</em>)</code></pre></p>
+<p><pre><code>from src.model import FacilityLocationOptimizer
+s = <b>FacilityLocationOptimizer</b>(<em>scenario='EMISSIONS', r_cap=6800, m_units=180, config_path=None</em>)</code></pre></p>
 
 <p>Initiates the class that optimizes the sourcing, siting, and distribution processes under various objectives and scenarios. </p>
 
@@ -27,6 +28,14 @@
 		<li><b>method</b> : <em>Default: MILP</em><br>MILP sets the solver to a mixed-integer linear programming solution; IP sets the solver to an integer linear programming solution; otherwise, the solver is set to solve the relaxation of the problem.</li>
 	</ul>
 </p>
+
+<br>
+<p><pre><code>from src import save
+save.<b>supply_network</b>(<em>s</em>)</code></pre></p>
+
+<p>Saves the solution of the model and preforms post-processing on the data. </p>
+
+
 
 <h2>Model Dependencies</h2>
 <h3> Install dependencies </h3>

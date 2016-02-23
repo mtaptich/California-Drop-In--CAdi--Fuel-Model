@@ -1,6 +1,5 @@
 from src.model import FacilityLocationOptimizer
 from src import save
-import pandas as pd, numpy as np
 
 def RunScenarios():
 	# S1
