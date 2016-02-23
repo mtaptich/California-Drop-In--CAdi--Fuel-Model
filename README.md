@@ -18,7 +18,7 @@ s = FacilityLocationOptimizer(scenario='EMISSIONS', r_cap=6800, m_units=180, con
 	</ul>
 </p>
 
-<br>
+
 ```python 
 s.predict(method='MILP')
 ```
@@ -31,7 +31,7 @@ s.predict(method='MILP')
 	</ul>
 </p>
 
-<br>
+
 ```python
 from src import save
 save.supply_network(s)
