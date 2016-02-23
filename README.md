@@ -4,6 +4,7 @@
 <h2>Usage</h2>
 ```python
 from src.model import FacilityLocationOptimizer
+
 s = FacilityLocationOptimizer(scenario='EMISSIONS', r_cap=6800, m_units=180, config_path=None)
 ```
 
@@ -20,9 +21,9 @@ s = FacilityLocationOptimizer(scenario='EMISSIONS', r_cap=6800, m_units=180, con
 </p>
 
 <br>
-'''python 
-s.<b>predict</b>(<em>method='MILP'</em>)</code>
-'''
+```python 
+s.predict(method='MILP')
+```
 
 <p>Runs the optimization of the upstream, midstream, and downstream supply-chain. </p>
 
@@ -34,8 +35,10 @@ s.<b>predict</b>(<em>method='MILP'</em>)</code>
 </p>
 
 <br>
-<p><pre><code>from src import save
-save.<b>supply_network</b>(<em>s</em>)</code></pre></p>
+```python from src import save
+
+save.supply_network(s)
+```
 
 <p>Saves the solution of the model and preforms post-processing on the data. </p>
 
