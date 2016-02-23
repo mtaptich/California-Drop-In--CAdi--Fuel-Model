@@ -4,7 +4,6 @@
 <h2>Usage</h2>
 ```python
 from src.model import FacilityLocationOptimizer
-
 s = FacilityLocationOptimizer(scenario='EMISSIONS', r_cap=6800, m_units=180, config_path=None)
 ```
 
@@ -37,7 +36,6 @@ s.predict(method='MILP')
 <br>
 ```python
 from src import save
-
 save.supply_network(s)
 ```
 
