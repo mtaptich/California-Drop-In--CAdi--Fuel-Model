@@ -18,8 +18,9 @@ s = <b>FacilityLocationOptimizer</b>(<em>scenario='EMISSIONS', r_cap=6800, m_uni
 </p>
 
 <br>
-<p>```python 
-s.<b>predict</b>(<em>method='MILP'</em>)</code>'''</p>
+'''python 
+s.<b>predict</b>(<em>method='MILP'</em>)</code>
+'''
 
 <p>Runs the optimization of the upstream, midstream, and downstream supply-chain. </p>
 
