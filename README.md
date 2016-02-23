@@ -6,7 +6,7 @@
 
 <p>Optimize the sourcing, siting, and distribution processes under various objectives and scenarios. </p>
 
-<p><ul>Parameters</ul>:</p>
+<p><u>Parameters</u>:</p>
 <p>
 	<ul>
 		<li><b>scenario</b> : <em>Default: EMISSIONS</em><br>EMISSIONS sets the objective to minimize emissions; GASOLINE sets the objective to maximize the output of gasoline; DIESEL sets the objective to maximize diesel; and, FUEL sets the objective to maximize fuel.</li>
