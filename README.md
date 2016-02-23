@@ -1,7 +1,9 @@
 <h1>California Drop-In (CAdi) Fuel Model</h1>
 <p>California Drop-In (CAdi) fuel model calculates the environmental impacts associated with large-scale deployment of second-generation transportation fuels in California.</p>
 
-<p><b>FacilityLocationOptimizer</b>(<em> scenario='EMISSIONS', r_cap=6800, m_units=180, config_path=None</em>) <br>Optimize the sourcing, siting, and distribution processes under various objectives and scenarios. </p>
+<p><code><b>FacilityLocationOptimizer</b>(<em> scenario='EMISSIONS', r_cap=6800, m_units=180, config_path=None</em>)</code></p>
+
+<p>Optimize the sourcing, siting, and distribution processes under various objectives and scenarios. </p>
 
 <h2>Model Dependencies</h2>
 <h3> Install dependencies </h3>
