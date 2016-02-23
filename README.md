@@ -7,9 +7,8 @@ from src.model import FacilityLocationOptimizer
 s = FacilityLocationOptimizer(scenario='EMISSIONS', r_cap=6800, m_units=180, config_path=None)
 ```
 
-<p>Initiates the class that optimizes the sourcing, siting, and distribution processes under various objectives and scenarios. </p>
+<p><em>Initiates the class that optimizes the sourcing, siting, and distribution processes under various objectives and scenarios.</em></p>
 
-<p><u>Parameters</u>:</p>
 <p>
 	<ul>
 		<li><b>scenario</b> : <em>Default: EMISSIONS</em><br>EMISSIONS sets the objective to minimize emissions; GASOLINE sets the objective to maximize the output of gasoline; DIESEL sets the objective to maximize diesel; and, FUEL sets the objective to maximize fuel.</li>
@@ -24,9 +23,8 @@ s = FacilityLocationOptimizer(scenario='EMISSIONS', r_cap=6800, m_units=180, con
 s.predict(method='MILP')
 ```
 
-<p>Runs the optimization of the upstream, midstream, and downstream supply-chain. </p>
+<p><em>Runs the optimization of the upstream, midstream, and downstream supply-chain.</em></p>
 
-<p><u>Parameters</u>:</p>
 <p>
 	<ul>
 		<li><b>method</b> : <em>Default: MILP</em><br>MILP sets the solver to a mixed-integer linear programming solution; IP sets the solver to an integer linear programming solution; otherwise, the solver is set to solve the relaxation of the problem.</li>
@@ -39,7 +37,7 @@ from src import save
 save.supply_network(s)
 ```
 
-<p>Saves the solution of the model and preforms post-processing on the data. </p>
+<p><em>Saves the solution of the model and preforms post-processing on the data.</em></p>
 
 
 
