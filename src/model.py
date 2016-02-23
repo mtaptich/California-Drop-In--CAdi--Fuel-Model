@@ -332,11 +332,7 @@ class FacilityLocationOptimizer:
 		return zeros(n_rows)[newaxis].T
 
 
-	def predict(s, method='MILP', target=None):
-
-		# Check to see if there is reduction target
-		assert target == None or target >=0;
-		s.target = target
+	def predict(s, method='MILP'):
 
 		# Integer-programming solution::True
 		s.method = method;
@@ -450,7 +446,7 @@ class FacilityLocationOptimizer:
 			(status, c)=cvxopt.glpk.ilp(Z,G,h,A,b,I,B)
 		else:
 			#RELAXATION of binary
-			(status, c)=cvxopt.glpk.ilp(Z,G,h)
+			(status, c)=cvxopt.glpk.ilp(Z,G,h,A,b)
 
 		return {'set': array(c).T[0], 'total': int((c.T * Z)[0])}
 
