@@ -10,6 +10,9 @@
 <p>
 	<ul>
 		<li><b>scenario</b> : <em>Default: EMISSIONS</em><br>EMISSIONS sets the objective to minimize emissions; GASOLINE sets the objective to maximize the output of gasoline; DIESEL sets the objective to maximize diesel; and, FUEL sets the objective to maximize fuel.</li>
+		<li><b>r_cap</b> : <em>Default: 6800</em><br>r_cap sets the maximum feedstock input (mt/yr) per unit refinery process. 6800 mt/yr is roughly equivalent to 0.5 MMg/yr fuel output.</li>
+		<li><b>m_units</b> : <em>Default: 180</em><br>m_units sets the maximum number of refinery units. 180 * 6800 mt/yr is roughly equivalent to 90 MMg/yr fuel output.</li>
+		<li><b>config_path</b> : <em>Default: None</em><br>config_path containts a set of base assumptions and file paths used in the scenario.</li>
 	</ul>
 </p>
 
