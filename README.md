@@ -35,7 +35,8 @@ s.predict(method='MILP')
 </p>
 
 <br>
-```python from src import save
+```python
+from src import save
 
 save.supply_network(s)
 ```
