@@ -109,7 +109,7 @@ class FacilityLocationOptimizer:
 			# Produce the most amount of gasoline based on feedstock availability
 			# while still considering the costs of moving goods (thus preserving 
 			# likely markets). To do so, keep the transport costs the same but 
-			# provide a substantial insentive to sell on type of fuel. 
+			# provide a substantial insentive to sell one type of fuel. 
 			
 			cF = ndarray.flatten(s.f_data);
 			temp = [split(x[0], s.n_up) for x in split(s.up_l_data, s.n_mid, axis=0)];
@@ -130,7 +130,7 @@ class FacilityLocationOptimizer:
 			# Produce the most amount of diesel based on feedstock availability
 			# while still considering the costs of moving goods (thus preserving 
 			# likely markets). To do so, keep the transport costs the same but 
-			# provide a substantial insentive to sell on type of fuel. 
+			# provide a substantial insentive to sell one type of fuel. 
 			
 			cF = ndarray.flatten(s.f_data);
 			temp = [split(x[0], s.n_up) for x in split(s.up_l_data, s.n_mid, axis=0)];
@@ -139,6 +139,26 @@ class FacilityLocationOptimizer:
 			# Negative fuel costs will drive optimial decision
 			cDL = repeat(s.down_l_data, s.n_fuels)
 			cec = tile([ 0.,10000000.], s.n_mid * s.n_down)
+			cW = cDL - cec;
+
+			cV = zeros(s.var['y'], dtype='int8')
+
+			Z = hstack((cF, cUL, cW, cV))
+
+			return matrix(Z)
+
+		elif s.scenario == 'FUEL':
+			# Produce the most amount of fuel based on feedstock availability
+			# while still considering the costs of moving goods (thus preserving 
+			# likely markets). 
+			
+			cF = ndarray.flatten(s.f_data);
+			temp = [split(x[0], s.n_up) for x in split(s.up_l_data, s.n_mid, axis=0)];
+			cUL = ndarray.flatten(tile(temp,s.n_pathways));
+
+			# Negative fuel costs will drive optimial decision
+			cDL = repeat(s.down_l_data, s.n_fuels)
+			cec = tile([ 10000000., 10000000], s.n_mid * s.n_down)
 			cW = cDL - cec;
 
 			cV = zeros(s.var['y'], dtype='int8')
@@ -201,6 +221,7 @@ class FacilityLocationOptimizer:
 		gv = zeros((n_rows, s.var['y']), dtype='int8')
 		#G
 		g = hstack((gyx, gw, gv));
+		assert g.shape[1] 
 
 		return sparse(g.tolist()).trans();
 
@@ -239,7 +260,7 @@ class FacilityLocationOptimizer:
 		#V
 		gv = matrix(0, (n_rows, s.var['y']))
 		
-		return cvxopt.sparse([[gy],[gxw],[gv]])
+		return sparse([[gy],[gxw],[gv]])
 
 	def positives_data(s):
 
@@ -291,6 +312,26 @@ class FacilityLocationOptimizer:
 
 		return sparse(g.tolist()).trans();
 
+	def combo_pathways_builder(s):
+		n_rows = s.n_up*s.n_mid*s.n_feedstocks;
+		#Y
+		gy = mp.szero(n_rows, s.var['y']);
+		#XW
+		gx = mp.bd_sparse(array([[1,0,0,0,0,0,-1,0,0,0,0,0],[0,1,0,0,0,0,0,-1,0,0,0,0],[0,0,1,0,0,0,0,0,-1,0,0,0]]), s.n_up*s.n_mid);
+		#V
+		gwv = mp.szero(n_rows, s.var['w'] + s.var['v']);
+		#G
+		g = mp.shstack((gy, gx, gwv))
+		
+		return mp.scipy_sparse_to_spmatrix(g);
+
+
+	def combo_pathways_data(s):
+		n_rows = s.n_up*s.n_mid*s.n_feedstocks;
+
+		return zeros(n_rows)[newaxis].T
+
+
 	def predict(s, method='MILP', target=None):
 
 		# Check to see if there is reduction target
@@ -317,7 +358,7 @@ class FacilityLocationOptimizer:
 		g3 = s.demand_builder()
 		h3 = s.demand_data()
 
-		# FOURTH CONSTRAINT - The amount of fuel a county recieves cannot exceed what is produced at a refinery.#
+		# FOURTH CONSTRAINT - The amount of fuel a county recieves is equal to what is produced at a refinery.#
 		g4 = s.conversion_builder()
 		h4 = s.conversion_data()
 
@@ -337,59 +378,34 @@ class FacilityLocationOptimizer:
 		g7 = s.threshold_builder();
 		h7 = s.threshold_data();
 
+		# EIGTH CONSTRAINT - Pyrolysis produces two fuels at once. Force the pyrolysis feedstocks decision variables to be equal. 
+		g8 = s.combo_pathways_builder()
+		h8 = s.combo_pathways_data()
+
 
 		# FORM G*x <= h  ########################################################################################
-		if not target:
-			# Use all columns so set trimmed columns to False
-			s.trimmed_cols = False
+		# Use all columns so set trimmed columns to False
+		s.trimmed_cols = False
 
-			# Run optmization without constraint on objective.
-			G = cvxopt.sparse([g1,g2,g3,g4,g5,g6,g7])
-			g1, g2, g3, g4, g5, g6, g7 = None, None, None, None, None, None, None
+		# Run optmization without constraint on objective.
+		G = cvxopt.sparse([g1,g2,g3,g5,g6,g7])
+		g1, g2, g3, g5, g6, g7 = None, None, None, None, None, None
 
-			h = matrix(vstack((h1,h2,h3,h4,h5,h6,h7)))
-			h1, h2, h3, h4, h5, h6, h7 = None, None, None, None, None, None, None 
+		h = matrix(vstack((h1,h2,h3,h5,h6,h7)))
+		h1, h2, h3, h5, h6, h7 = None, None, None, None, None, None
 
-			
-		elif target and method =='Relax':
-			Zx_base = genfromtxt(s.config.get('Paths', 'extra_path')+'Zx.csv')
-			Z_base = hstack((ones(s.var['y']), Zx_base, ones(s.var['w'] + s.var['v'])));
-			s.trimmed_cols = Z_base.nonzero()[0].tolist()
-
-			# Target refers to a reduction target as a percentage of the baseline.
-			# The relax method ignores the minimum capacity size but keeps maximum size
-			g6_ = s.relaxed_threshold_builder()
-			G = cvxopt.sparse([g1,g2,g3,g4,g5,g6_, sparse(-Z).trans()])
-			g1, g2, g3, g4, g5, g6, g7, g6_ = None, None, None, None, None, None, None, None
-
-			# Trim columns
-			G = G[:, s.trimmed_cols];
-			Z = Z[s.trimmed_cols,:];
-
-			h6_ = ones(s.var["y"])[newaxis].T * s.m_units
-			h = matrix(vstack((h1,h2,h3,h4,h5, h6_, [dot(sum(s.d_data, axis=0), s.ec_data) * target])))
-			h1, h2, h3, h4, h5, h6, h7, h6_ = None, None, None, None, None, None, None, None
-
-		else:
-			# Use all columns so set trimmed columns to False
-			s.trimmed_cols = False
-
-			# Target refers to a reduction target as a percentage of the baseline.
-			G = cvxopt.sparse([g1,g2,g3,g4,g5,g6,g7, sparse(-Z).trans()])
-			g1, g2, g3, g4, g5, g6, g7 = None, None, None, None, None, None, None
-
-			h = matrix(vstack((h1,h2,h3,h4,h5,h6,h7, [dot(sum(s.d_data, axis=0), s.ec_data) * target])))
-			h1, h2, h3, h4, h5, h6, h7 = None, None, None, None, None, None, None
+		A = cvxopt.sparse([g4, g8])
+		b = matrix(vstack((h4,h8)))
 
 
 		#Solve
-		s.solution = s.solver(Z, G, h);
+		s.solution = s.solver(Z, G, h, A=A, b=b);
 		s.model = {'Z': Z, 'G': G, 'h': h};
 
 		# Log model results
 		s.logging.info('%i kg CO2,e change from baseline.' % s.solution['total'])
 
-	def solver(s, Z, G, h):
+	def solver(s, Z, G, h, A=None, b=None):
 		"""
 	    Uses the integer linear program solver ilp from glpk:
 
@@ -412,9 +428,10 @@ class FacilityLocationOptimizer:
 
 		(rows, cols) = G.size
 
-		# SET OPTIMIZATION PARAMETERS
-		(A, b) = (matrix(1., (0,cols)), matrix(1., (0,1)))
-
+		if A is None or b is None:
+			# SET OPTIMIZATION PARAMETERS
+			(A, b) = (matrix(1., (0,cols)), matrix(1., (0,1)))
+		
 		if s.method == 'IP':
 			if (s.max_refineries == 1):
 				# Binary
