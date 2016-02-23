@@ -16,6 +16,7 @@
 	</ul>
 </p>
 
+<br>
 <p><pre><code>s.<b>predict</b>(<em>method='MILP'</em>)</code></pre></p>
 
 <p>Runs the optimization of the upstream, midstream, and downstream supply-chain. </p>
