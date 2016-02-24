@@ -57,7 +57,7 @@ class FacilityLocationOptimizer:
 		# checks
 		assert (s.up_l_data.shape[0] == s.down_l_data.shape[0]);
 
-	def obective_builder(s):
+	def obective_builder(s, last_km_e = 45*0.130): #40km x ef_truck
 		if s.scenario == 'EMISSIONS':
 			# Capital emissions
 			cF = ndarray.flatten(s.f_data);
@@ -95,7 +95,7 @@ class FacilityLocationOptimizer:
 			# Summation of costs
 			cX = cUL + ch + cp + c_;
 
-			cDL = repeat(s.down_l_data, s.n_fuels)
+			cDL = repeat(s.down_l_data + last_km_e, s.n_fuels)
 			cec = tile(s.ec_data, s.n_mid * s.n_down)
 			cW = cDL - cec;
 
@@ -116,7 +116,7 @@ class FacilityLocationOptimizer:
 			cUL = ndarray.flatten(tile(temp,s.n_pathways));
 
 			# Negative fuel costs will drive optimial decision
-			cDL = repeat(s.down_l_data, s.n_fuels)
+			cDL = repeat(s.down_l_data + last_km_e, s.n_fuels)
 			cec = tile([ 10000000.,0.], s.n_mid * s.n_down)
 			cW = cDL - cec;
 
@@ -137,7 +137,7 @@ class FacilityLocationOptimizer:
 			cUL = ndarray.flatten(tile(temp,s.n_pathways));
 
 			# Negative fuel costs will drive optimial decision
-			cDL = repeat(s.down_l_data, s.n_fuels)
+			cDL = repeat(s.down_l_data + last_km_e, s.n_fuels)
 			cec = tile([ 0.,10000000.], s.n_mid * s.n_down)
 			cW = cDL - cec;
 
@@ -157,7 +157,7 @@ class FacilityLocationOptimizer:
 			cUL = ndarray.flatten(tile(temp,s.n_pathways));
 
 			# Negative fuel costs will drive optimial decision
-			cDL = repeat(s.down_l_data, s.n_fuels)
+			cDL = repeat(s.down_l_data + last_km_e, s.n_fuels)
 			cec = tile([ 10000000., 10000000], s.n_mid * s.n_down)
 			cW = cDL - cec;
 
@@ -391,7 +391,7 @@ class FacilityLocationOptimizer:
 		h1, h2, h3, h5, h6, h7 = None, None, None, None, None, None
 
 		A = cvxopt.sparse([g4, g8])
-		b = matrix(vstack((h4,h8)))
+		b = matrix(vstack((h4, h8)))
 
 
 		#Solve

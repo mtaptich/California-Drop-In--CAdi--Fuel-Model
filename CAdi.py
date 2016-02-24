@@ -46,8 +46,8 @@ def RunScenarios():
 	
 
 RunScenarios()
-#config_path = 'config/S1_A_max_gasoline.ini'
-#s = FacilityLocationOptimizer(scenario='GASOLINE', config_path=config_path)
+#config_path = 'config/S2_max_fuel.ini'
+#s = FacilityLocationOptimizer(scenario='FUEL', config_path=config_path)
 #s.predict();
 #save.supply_network(s)
 

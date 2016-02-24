@@ -346,6 +346,7 @@ def supply_network(s):
 	production = json.load(open('src/base/fuel_production_emission_factors.json'));
 	transport = json.load(open('src/base/transport_emission_factors.json'))
 	conventional = json.load(open('src/base/conventional_emission_factors.json'))
+	total_demand = server.pg_df('SELECT SUM(million_gals_gasoline_2012*1000000*(6.0/2209.0)) AS mt_gas_demand, SUM(million_gals_diesel_2012*1000000*(7.5/2209.0)) AS mt_diesel_demand FROM downstream_locations_california;')
 
 	data = []
 	change_in_baseline = []
@@ -354,9 +355,11 @@ def supply_network(s):
 		t = transport['road'][e] * (df_upL['Total Road Turnover (tkm/yr)'].sum() + df_downL['Total Road Turnover (tkm/yr)'].sum()) + transport['rail'][e]*(df_upL['Total Rail Turnover (tkm/yr)'].sum() + df_downL['Total Rail Turnover (tkm/yr)'].sum()) + transport['pipe'][e]*df_downL['Total Pipeline Turnover (tkm/yr)'].sum() + (supply_chain_overview['Gasoline (mt/yr)'].sum() + supply_chain_overview['Diesel (mt/year)'].sum()) * transport['road'][e] * 45 # 45 km last mile
 		p = production['m2g'][e] * df_supply[df_supply.pathway=='m2g'][['Cropres (mt/yr)', 'Forestres (mt/yr)', 'Scrapwood (mt/yr)',]].sum(axis=1).sum(axis=0) + production['ft'][e] * df_supply[df_supply.pathway=='ft'][['Cropres (mt/yr)', 'Forestres (mt/yr)', 'Scrapwood (mt/yr)',]].sum(axis=1).sum(axis=0) + production['pg'][e]* df_supply[df_supply.pathway=='pg'][['Cropres (mt/yr)', 'Forestres (mt/yr)', 'Scrapwood (mt/yr)',]].sum(axis=1).sum(axis=0) + production['pd'][e] * df_supply[df_supply.pathway=='pd'][['Cropres (mt/yr)', 'Forestres (mt/yr)', 'Scrapwood (mt/yr)',]].sum(axis=1).sum(axis=0);
 		c = supply_chain_overview['Gasoline (mt/yr)'].sum() * conventional['gas'][e] + supply_chain_overview['Diesel (mt/year)'].sum() * conventional['diesel'][e];
+		B = float(total_demand['mt_gas_demand']* conventional['gas'][e] + total_demand['mt_diesel_demand'] * conventional['diesel'][e]);
 
 		data.append({'Pollutant (kg y-1)': e, "Handling": h, "Transport": t, "Capital": 0, "Fuel Production": p, "Total":  h+t+p})
-		change_in_baseline.append({'Pollutant (kg y-1)': e, 'Total': h+t+p, 'Change from Baseline': h+t+p-c})
+		change_in_baseline.append({'Pollutant (kg y-1)': e,'Scenario State Total':  (h+t+p-c) + B, "Baseline State Total": B, 'Change from Baseline': h+t+p-c, 'Percentage Change from Baseline': (h+t+p-c) / B})
+
 	
 	# Update 
 	supply_chain_overview = pd.merge(supply_chain_overview, df_upL[['County FIPS', 'Refinery ID', 'crop_km_road','crop_km_rail','wood_km_road','wood_km_rail']], on=['County FIPS', 'Refinery ID'], how='left')
@@ -383,8 +386,8 @@ def supply_network(s):
 	
 	# Save
 	pd.DataFrame(totals).to_excel(writer, 'Executive Summary', index=False);
-	pd.DataFrame(data).to_excel(writer,'Emissions Summary', columns=['Pollutant (kg y-1)', "Handling", "Transport", "Capital", "Fuel Production",  "Total"], index=False);
-	pd.DataFrame(change_in_baseline).to_excel(writer,'Emissions Change Baseline', columns=['Pollutant (kg y-1)', "Total", 'Change from Baseline'], index=False);
+	pd.DataFrame(change_in_baseline).to_excel(writer,'Emissions Change Baseline', columns=['Pollutant (kg y-1)', 'Scenario State Total', 'Baseline State Total', 'Change from Baseline', 'Percentage Change from Baseline'], index=False);
+	pd.DataFrame(data).to_excel(writer,'Emissions by Component', columns=['Pollutant (kg y-1)', "Handling", "Transport", "Capital", "Fuel Production",  "Total"], index=False);
 	supply_chain_overview.to_excel(writer,'Supply-Chain Overview', index=False);
 	feedstock_summary.to_excel(writer, 'Feedstock Summary', index=False);
 	df_upL.to_excel(writer,'Upstream Transport Summary', index=False);
