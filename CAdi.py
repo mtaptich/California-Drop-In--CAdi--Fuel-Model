@@ -2,15 +2,21 @@ from src.model import FacilityLocationOptimizer
 from src import save
 
 def RunScenarios():
-	# S1
-	config_path = 'config/S1_max_gasoline.ini'
+	# S1.A
+	config_path = 'config/S1A_max_gasoline.ini'
 	s = FacilityLocationOptimizer(scenario='GASOLINE', config_path=config_path)
 	s.predict();
 	save.supply_network(s)
 
-	# S2
-	config_path = 'config/S2_max_diesel.ini'
+	# S1.B
+	config_path = 'config/S1B_max_diesel.ini'
 	s = FacilityLocationOptimizer(scenario='DIESEL', config_path=config_path)
+	s.predict();
+	save.supply_network(s)
+
+	# S2
+	config_path = 'config/S2_max_fuel.ini'
+	s = FacilityLocationOptimizer(scenario='FUEL', config_path=config_path)
 	s.predict();
 	save.supply_network(s)
 
@@ -39,10 +45,10 @@ def RunScenarios():
 	save.supply_network(s)
 	
 
-#RunScenarios()
-config_path = 'config/S1_A_max_gasoline.ini'
-s = FacilityLocationOptimizer(scenario='GASOLINE', config_path=config_path)
-s.predict();
-save.supply_network(s)
+RunScenarios()
+#config_path = 'config/S1_A_max_gasoline.ini'
+#s = FacilityLocationOptimizer(scenario='GASOLINE', config_path=config_path)
+#s.predict();
+#save.supply_network(s)
 
 

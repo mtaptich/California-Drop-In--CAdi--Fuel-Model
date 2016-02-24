@@ -394,7 +394,7 @@ def supply_network(s):
 	writer.save()
 
 	# Refineries
-	tb= s.config.get('Extra', 'scenario')[:2].lower()+'_refinery_overview';
+	tb= s.config.get('Extra', 'scenario')[:3].lower()+'_refinery_overview';
 	d = df_refinery[['Refinery ID', 'Refinery FIPS', 'Gasoline (mt/yr)',	'Diesel (mt/year)']]
 	d.columns = ['refinery', 'refinery_fips', 'gas', 'diesel']
 	d['total'] = d.gas + d.diesel
@@ -412,7 +412,7 @@ def supply_network(s):
 	df_terminal.columns = ['terminal', 'terminal_fips']
 	supply_chain_overview = pd.merge(supply_chain_overview, df_terminal, on='terminal', how='left');
 
-	tb= s.config.get('Extra', 'scenario')[:2].lower()+'_supply_chain_overview';
+	tb= s.config.get('Extra', 'scenario')[:3].lower()+'_supply_chain_overview';
 	server.df_pg(supply_chain_overview, tb);
 
 	connection = server.cur.connect()
@@ -422,6 +422,9 @@ def supply_network(s):
 	connection.execute(SQLcommand)
 	SQLcommand = """ALTER TABLE %(tb)s ADD COLUMN down_region text; UPDATE %(tb)s z SET down_region = a.label FROM ca_agg_divisions a WHERE CAST(z.terminal_fips as integer)=a.county; """ % { 'tb': tb}
 	connection.execute(SQLcommand)
+	SQLcommand = """ALTER TABLE %(tb)s ADD COLUMN the_geom geometry; UPDATE %(tb)s z SET the_geom = a.the_geom FROM facility_locations_about_cities a WHERE CAST(z.refinery as integer)=a.id; """ % { 'tb': tb}
+	connection.execute(SQLcommand)
+
 	connection.close();
 
 	supply_chain_overview = server.pg_df(tb)

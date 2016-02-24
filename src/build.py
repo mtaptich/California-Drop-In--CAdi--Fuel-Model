@@ -363,10 +363,10 @@ class CreateConfigScenario:
 
 if __name__ == "__main__":
 	
-	c = CreateConfigScenario('S1_A_max_gasoline', quick_build=True, config_path='../config/', config_template='config_template.ini');
+	c = CreateConfigScenario('S1A_max_gasoline', quick_build=True, config_path='../config/', config_template='config_template.ini');
 	c.save()
 
-	c = CreateConfigScenario('S1_B_max_diesel', quick_build=True, config_path='../config/', config_template='config_template.ini');
+	c = CreateConfigScenario('S1B_max_diesel', quick_build=True, config_path='../config/', config_template='config_template.ini');
 	c.save()
 
 	c = CreateConfigScenario('S2_max_fuel', quick_build=True, config_path='../config/', config_template='config_template.ini');
@@ -383,7 +383,6 @@ if __name__ == "__main__":
 	c = CreateConfigScenario('S5_distributed_ca', quick_build=True, config_path='../config/', config_template='config_template.ini');
 	c.save()
 	
-
 	c = CreateConfigScenario('S6_even_distribution', quick_build=True, config_path='../config/', config_template='config_template.ini')
 	SQLcommand='SELECT id AS destination, CAST(million_gals_gasoline_2012*1000000*(6.0/2209.0)*0.086 AS integer) AS mt_gas_demand, CAST(million_gals_diesel_2012*1000000*(7.5/2209.0) AS integer)*20.4 AS mt_diesel_demand FROM downstream_locations_california';
 	c.energy_demand(SQLcommand=SQLcommand)
