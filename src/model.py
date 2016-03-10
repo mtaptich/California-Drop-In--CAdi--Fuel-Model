@@ -157,7 +157,7 @@ class FacilityLocationOptimizer:
 			cUL = ndarray.flatten(tile(temp,s.n_pathways));
 
 			# Negative fuel costs will drive optimial decision
-			cDL = repeat(s.down_l_data + last_km_e, s.n_fuels)
+			cDL = repeat(s.down_l_data, s.n_fuels)
 			cec = tile([ 10000000., 10000000], s.n_mid * s.n_down)
 			cW = cDL - cec;
 
